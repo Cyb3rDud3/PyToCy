@@ -1,9 +1,15 @@
 PyToCy
 (( POC ONLY ))
 
-Easy Automatic conversation if python syntax to cython syntax [[ POC ]]
+Easy Automatic conversation from python syntax to cython syntax 
 
-Usage:
+<b>./main.py --infile foo.py --compile True --> will make cython module called foo_cythonized</b>
+
+<b>./main.py --infile foo.py --> will print the cythonized content of foo.py</b>
+
+
+
+	Usage:
         use basic-lib type annotations to "cythonize" a section.
         section without type annotation will not be cythonized.
         example:
@@ -31,9 +37,8 @@ Usage:
             ______________________________
 
 
-            *CLASSES ARE CURRENTLY NOT SUPPORTED*
+Notes:
+	 *CLASSES ARE CURRENTLY NOT SUPPORTED, SO THEY WILL REMAIN PYTHONIEZD*
+	 *Passing anything without type annotation --> will result in the object remaining pythonized (while it still can be cythonized, it will be without any type optimizations so don't expect anything special in the performance section*
 
-            ./main.py --infile foo.py --compile True --> will make cython module called foo_cythonized
-            ./main.py --infile foo.py --> will print the cythonized content of foo.py
-            
             
