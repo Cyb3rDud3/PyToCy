@@ -4,10 +4,6 @@ PyToCy
 Easy Automatic conversation if python syntax to cython syntax [[ POC ]]
 
 Usage:
-    install:
-        replace the methods at $PYTHON/Lib/ast.py with those in our local ast_to_rep.py
-
-    usage:
         use basic-lib type annotations to "cythonize" a section.
         section without type annotation will not be cythonized.
         example:
@@ -37,7 +33,7 @@ Usage:
 
             *CLASSES ARE CURRENTLY NOT SUPPORTED*
 
-            from ast import unparse,parse
-            code = """ your_py_code_here """
-            res = unparse(parse(code),should_cythonize=True)
-            #put res in file that end's with *.pyx*, and cythonize/cython it.
+            ./main.py --infile foo.py --compile True --> will make cython module called foo_cythonized
+            ./main.py --infile foo.py --> will print the cythonized content of foo.py
+            
+            
