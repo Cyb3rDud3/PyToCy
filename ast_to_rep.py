@@ -1,7 +1,11 @@
-from ast import NodeVisitor, Name
+import ast
+import argparse
+Name,parse = ast.Name, ast.parse
+parser = argparse.ArgumentParser()
+parser.add_argument("--infile", type=str,required=True)
+parser.add_argument('-c',"--compile")
 
-# file to edit == $PYTHON/Lib/ast.py
-# add the next section at the top of the file, after the imports
+args = parser.parse_args()
 KNOWN_CYTHON_TYPES = {"bool": "bint",
                       "int": "int",
                       "float": "float",
@@ -15,13 +19,10 @@ KNOWN_CYTHON_TYPES = {"bool": "bint",
                       "bytes": "bytes"}
 
 
-# from here, all the next sections are methods of _Unparser Class. replace them.
-class _Unparser(NodeVisitor):
-    """Methods in this class recursively traverse an AST and
-    output source code for the abstract syntax; original formatting
-    is disregarded."""
 
-    def __init__(self, *, _avoid_backslashes=False, should_cythonize=False):
+class _Unparser(ast._Unparser):
+    def __init__(self,*, _avoid_backslashes=False, should_cythonize=False):
+        ast._Unparser.__init__(self,)
         self._source = []
         self._buffer = []
         self._precedences = {}
@@ -119,3 +120,51 @@ class _Unparser(NodeVisitor):
                 self.fill(to_add, is_cython=True)
             with self.block(extra=self.get_type_comment(node)):
                 self._write_docstring_and_traverse_body(node)
+
+
+
+def unparse(ast_obj):
+    unparser = _Unparser(should_cythonize=True)
+    return unparser.visit(ast_obj)
+
+def make_code(code):
+    code = parse(code)
+    return unparse(code)
+
+def load_code_from_file(file: str) -> str:
+    try:
+        with open(file, 'r') as f:
+            return f.read()
+    except Exception as e:
+        print(e)
+        return ''
+
+def main():
+    source_code = load_code_from_file(args.infile)
+    if not source_code:
+        print('unknown error')
+        exit()
+    source_code = make_code(source_code)
+    if args.compile:
+        if args.infile.endswith('.pyx'):
+            file = args.infile.replace('.pyx','_cythonized.pyx')
+        elif args.infile.endswith('.py'):
+            file = args.infile.replace('.py','_cythonized.pyx')
+        else:
+            file = args.infile + '_cythonized.pyx'
+        print(file)
+        with open(file, 'w') as to_cython_file:
+            to_cython_file.write(source_code)
+        from setuptools import setup,sandbox
+        from Cython.Build import cythonize
+        from Cython.Distutils import build_ext
+        setup(ext_modules=cythonize(file,language_level = "3"), script_args=["build_ext", "--inplace"],cmdclass={'build_ext': build_ext})
+        print('[*] Finished Compiling of {}, You can import your functions from {}. \n Example: from {} import Foo'.format(args.infile.replace('\\','').replace('/','').replace('.py','').replace('.',''), file.replace('.pyx', '').replace('\\','').replace('/','').replace('.',''),file.replace('.pyx','').replace('\\','').replace('/','').replace('.','')))
+    else:
+        print(source_code)
+
+
+
+
+if __name__ == "__main__":
+    main()
