@@ -38,7 +38,10 @@ Easy Automatic conversation from python syntax to cython syntax
 
 
 Notes:
-	 *CLASSES ARE CURRENTLY NOT SUPPORTED, SO THEY WILL REMAIN PYTHONIEZD*
-	 *Passing anything without type annotation --> will result in the object remaining pythonized (while it still can be cythonized, it will be without any type optimizations so don't expect anything special in the performance section*
+
+         *CLASSES ARE CURRENTLY NOT SUPPORTED, SO THEY WILL REMAIN PYTHONIEZD*
+	 
+	 *Passing anything without type annotation --> will result in the object remaining pythonized
+	 (while it still can be cythonized, it will be without any type optimizations so don't expect anything special in the performance section)*
 
             
