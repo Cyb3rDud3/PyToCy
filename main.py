@@ -134,7 +134,6 @@ class _Unparser(ast._Unparser):
 
 
     def visit_For(self,node: ast.For):
-        print( node.iter)
         if isinstance(node.iter, ast.Call) and not isinstance(node.iter.func, ast.Attribute) and node.iter.func.id in KNOWN_BUILTIN_LOOPS:
             self._for_helper("for ", node,cythonize_target=True)
         elif isinstance(node.iter, ast.List) or isinstance(node.iter,ast.Set) or isinstance(node.iter,ast.Tuple):
