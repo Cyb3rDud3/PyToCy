@@ -1,10 +1,8 @@
 import ast
 import argparse
 from collections import Counter
-from inspect import Attribute
-from tabnanny import check
 from typing import List, Optional, Union
-Name,parse = ast.Name, ast.parse
+Name,parse,Attribute = ast.Name, ast.parse,ast.Attribute
 parser = argparse.ArgumentParser()
 parser.add_argument("--infile", type=str,required=True)
 parser.add_argument('-c',"--compile")
